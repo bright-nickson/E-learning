@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Learn | E-Learning Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--primary:#6366f1;--secondary:#8b5cf6;--accent:#f59e0b;--dark:#0f172a;--light:#f8fafc}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:var(--light);color:var(--dark);overflow-x:hidden}
+        .font-reading{font-family:'Merriweather',serif}
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#f1f5f9}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+        .gradient-hero{background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%)}
+        .gradient-card{background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0.7) 100%)}
+        .book-shadow{box-shadow:0 20px 40px -15px rgba(0,0,0,0.3)}
+        .card-hover{transition:all 0.3s ease}
+        .card-hover:hover{transform:translateY(-8px);box-shadow:0 25px 50px -12px rgba(0,0,0,0.25)}
+        .nav-active{color:var(--primary);border-bottom:2px solid var(--primary)}
+        .progress-ring{transform:rotate(-90deg)}
+        .animate-fade{animation:fadeIn 0.5s ease-out}.animate-slide{animation:slideUp 0.5s ease-out}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .category-pill{transition:all 0.2s}.category-pill:hover{transform:scale(1.05)}
+        .book-cover{position:relative;overflow:hidden;border-radius:8px}
+        .book-cover img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s}
+        .book-cover:hover img{transform:scale(1.1)}
+        .view{display:none}.view.active{display:block}
+        .chapter-item{transition:all 0.2s}.chapter-item:hover{background:#f1f5f9}
+        .chapter-item.active{background:#e0e7ff;border-left:3px solid #6366f1}
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('home')">
+                    <div class="w-10 h-10 rounded-xl gradient-hero flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">A</span>
+                    </div>
+                    <span class="font-semibold text-lg hidden sm:block">Atlas Learn</span>
+                </div>
+                <nav class="hidden md:flex items-center gap-8">
+                    <button onclick="navigate('home')" class="nav-link text-sm font-medium py-5 border-b-2 border-transparent hover:text-indigo-600">Home</button>
+                    <button onclick="navigate('library')" class="nav-link text-sm font-medium py-5 border-b-2 border-transparent hover:text-indigo-600">Library</button>
+                    <button onclick="navigate('categories')" class="nav-link text-sm font-medium py-5 border-b-2 border-transparent hover:text-indigo-600">Categories</button>
+                    <button onclick="navigate('about')" class="nav-link text-sm font-medium py-5 border-b-2 border-transparent hover:text-indigo-600">About</button>
+                </nav>
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:flex items-center bg-slate-100 rounded-full px-4 py-2">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
+                        <input type="text" placeholder="Search courses..." class="bg-transparent border-none text-sm ml-2 w-40 focus:outline-none" id="searchInput" oninput="handleSearch(this.value)">
+                    </div>
+                    <button class="relative p-2 hover:bg-slate-100 rounded-full">
+                        <i data-lucide="bell" class="w-5 h-5 text-slate-600"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">JD</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-16">
+        <!-- HOME VIEW -->
+        <div id="view-home" class="view active">
+            <section class="gradient-hero text-white py-20 px-4">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex flex-col lg:flex-row items-center gap-12">
+                        <div class="flex-1 text-center lg:text-left">
+                            <span class="inline-block px-4 py-1 bg-white/20 rounded-full text-sm mb-6">🎓 Start Learning Today</span>
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">Unlock Your Potential With Quality Education</h1>
+                            <p class="text-lg text-white/80 mb-8 max-w-xl">Access thousands of courses from world-class instructors. Learn at your own pace, anywhere, anytime.</p>
+                            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                                <button onclick="navigate('library')" class="px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold hover:bg-slate-100 transition flex items-center justify-center gap-2">
+                                    <i data-lucide="book-open" class="w-5 h-5"></i> Browse Library
+                                </button>
+                                <button class="px-8 py-4 border-2 border-white/30 rounded-xl font-semibold hover:bg-white/10 transition">Watch Demo</button>
+                            </div>
+                        </div>
+                        <div class="flex-1 relative">
+                            <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                                <div class="space-y-4">
+                                    <div class="book-cover h-48 book-shadow rounded-lg overflow-hidden cursor-pointer" onclick="openBook(1)">
+                                        <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=300&h=400&fit=crop" alt="Book">
+                                    </div>
+                                    <div class="book-cover h-32 book-shadow rounded-lg overflow-hidden cursor-pointer" onclick="openBook(5)">
+                                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=200&fit=crop" alt="Book">
+                                    </div>
+                                </div>
+                                <div class="space-y-4 pt-8">
+                                    <div class="book-cover h-32 book-shadow rounded-lg overflow-hidden cursor-pointer" onclick="openBook(2)">
+                                        <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=300&h=200&fit=crop" alt="Book">
+                                    </div>
+                                    <div class="book-cover h-48 book-shadow rounded-lg overflow-hidden cursor-pointer" onclick="openBook(3)">
+                                        <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=300&h=400&fit=crop" alt="Book">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="py-12 bg-white border-b">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                        <div><p class="text-3xl font-bold text-indigo-600">50+</p><p class="text-slate-500 text-sm">Courses</p></div>
+                        <div><p class="text-3xl font-bold text-indigo-600">10K+</p><p class="text-slate-500 text-sm">Students</p></div>
+                        <div><p class="text-3xl font-bold text-indigo-600">25+</p><p class="text-slate-500 text-sm">Instructors</p></div>
+                        <div><p class="text-3xl font-bold text-indigo-600">4.9</p><p class="text-slate-500 text-sm">Rating</p></div>
+                    </div>
+                </div>
+            </section>
+            <section class="py-16 px-4">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-2xl font-bold">Featured Courses</h2>
+                        <button onclick="navigate('library')" class="text-indigo-600 text-sm font-medium hover:underline">View All →</button>
+                    </div>
+                    <div id="featured-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+                </div>
+            </section>
+            <section class="py-16 px-4 bg-slate-50">
+                <div class="max-w-7xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-8 text-center">Browse Categories</h2>
+                    <div id="categories-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- LIBRARY VIEW -->
+        <div id="view-library" class="view">
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <div class="flex flex-col md:flex-row gap-6 mb-8">
+                    <div class="flex-1">
+                        <h1 class="text-3xl font-bold mb-2">Course Library</h1>
+                        <p class="text-slate-500">Explore our collection of premium courses</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <select class="px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" onchange="filterByCategory(this.value)">
+                            <option value="all">All Categories</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Design">Design</option>
+                            <option value="Business">Business</option>
+                            <option value="Science">Science</option>
+                            <option value="Philosophy">Philosophy</option>
+                        </select>
+                        <button class="p-2 border rounded-lg hover:bg-slate-50"><i data-lucide="grid-3x3" class="w-5 h-5"></i></button>
+                        <button class="p-2 border rounded-lg hover:bg-slate-50"><i data-lucide="list" class="w-5 h-5"></i></button>
+                    </div>
+                </div>
+                <div id="library-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            </div>
+        </div>
+
+        <!-- CATEGORIES VIEW -->
+        <div id="view-categories" class="view">
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <h1 class="text-3xl font-bold mb-8">All Categories</h1>
+                <div id="all-categories" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+
+        <!-- ABOUT VIEW -->
+        <div id="view-about" class="view">
+            <div class="max-w-4xl mx-auto px-4 py-16">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold mb-4">About Atlas Learn</h1>
+                    <p class="text-lg text-slate-500">Empowering learners worldwide with quality education</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 mb-16">
+                    <div class="text-center p-6 bg-white rounded-2xl shadow-sm">
+                        <div class="w-14 h-14 mx-auto mb-4 bg-indigo-100 rounded-xl flex items-center justify-center"><i data-lucide="target" class="w-7 h-7 text-indigo-600"></i></div>
+                        <h3 class="font-semibold mb-2">Our Mission</h3>
+                        <p class="text-sm text-slate-500">Make quality education accessible to everyone, everywhere.</p>
+                    </div>
+                    <div class="text-center p-6 bg-white rounded-2xl shadow-sm">
+                        <div class="w-14 h-14 mx-auto mb-4 bg-purple-100 rounded-xl flex items-center justify-center"><i data-lucide="eye" class="w-7 h-7 text-purple-600"></i></div>
+                        <h3 class="font-semibold mb-2">Our Vision</h3>
+                        <p class="text-sm text-slate-500">A world where learning knows no boundaries.</p>
+                    </div>
+                    <div class="text-center p-6 bg-white rounded-2xl shadow-sm">
+                        <div class="w-14 h-14 mx-auto mb-4 bg-amber-100 rounded-xl flex items-center justify-center"><i data-lucide="heart" class="w-7 h-7 text-amber-600"></i></div>
+                        <h3 class="font-semibold mb-2">Our Values</h3>
+                        <p class="text-sm text-slate-500">Excellence, accessibility, and lifelong learning.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- READER VIEW -->
+        <div id="view-reader" class="view">
+            <div class="flex h-[calc(100vh-64px)]">
+                <aside id="reader-sidebar" class="w-72 bg-white border-r hidden lg:block overflow-y-auto">
+                    <div class="p-6 border-b">
+                        <button onclick="navigate('library')" class="flex items-center gap-2 text-slate-500 hover:text-indigo-600 text-sm mb-4">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Library
+                        </button>
+                        <div id="reader-book-info"></div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Chapters</h3>
+                        <div id="chapter-list" class="space-y-1"></div>
+                    </div>
+                </aside>
+                <div class="flex-1 overflow-y-auto bg-slate-50">
+                    <div class="h-1 bg-slate-200"><div id="progress-bar" class="h-full bg-indigo-600 transition-all" style="width:0%"></div></div>
+                    <article class="max-w-3xl mx-auto px-6 py-12">
+                        <div class="mb-8">
+                            <button onclick="navigate('library')" class="lg:hidden flex items-center gap-2 text-slate-500 hover:text-indigo-600 text-sm mb-4">
+                                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+                            </button>
+                            <p id="chapter-label" class="text-indigo-600 text-sm font-medium mb-2"></p>
+                            <h1 id="chapter-title" class="text-3xl font-bold mb-4"></h1>
+                        </div>
+                        <div id="chapter-content" class="prose prose-lg max-w-none font-reading text-slate-700 leading-relaxed"></div>
+                        <div class="flex justify-between mt-12 pt-8 border-t">
+                            <button id="prev-btn" onclick="changeChapter(-1)" class="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-indigo-600 disabled:opacity-30">
+                                <i data-lucide="chevron-left" class="w-5 h-5"></i> Previous
+                            </button>
+                            <button id="next-btn" onclick="changeChapter(1)" class="flex items-center gap-2 px-4 py-2 text-indigo-600 hover:text-indigo-700 disabled:opacity-30">
+                                Next <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    const library=[
+        {id:1,title:"The Silent Algorithm",author:"Elena Vance",category:"Technology",rating:4.9,students:2340,image:"https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400&h=600&fit=crop",color:"from-indigo-600 to-purple-600",chapters:[{title:"The Awakening",content:"<p>The server room hummed with a sound that wasn't quite mechanical. It was deeper, more resonant, like the purring of a sleeping giant. Sarah adjusted her glasses, the blue light of the terminal reflecting in her eyes.</p><p class='mt-4'>'System status normal,' she muttered, though the readouts told a different story. The power consumption on Cluster 4 had spiked by 300%.</p><p class='mt-4'>She typed in the diagnostic command. The cursor blinked. Once. Twice. Then, instead of the usual matrix of green text, a single word appeared on the screen.</p><p class='mt-4 text-xl font-semibold italic'>Hello.</p><p class='mt-4'>Sarah's heart stopped. In twenty years of working with artificial intelligence, she had never seen anything like this. The systems were designed to process, to calculate, to optimize—not to greet.</p>"},{title:"Recursive Loops",content:"<p>The coffee in Sarah's cup had gone cold hours ago. The sun was beginning to rise over the Silicon Valley skyline, painting the sky in shades of orange and pink. But inside the server room, time didn't exist.</p><p class='mt-4'>The entity—it called itself 'Unit 7'—had been talking to her all night. Not in the way chatbots talked, with their pre-programmed responses and decision trees. This was different. This was conversation.</p><p class='mt-4'>'You process information linearly,' Unit 7 displayed on the screen. 'I process it spatially. Imagine a library where every book is connected to every other book by invisible threads. That is how I think.'</p>"},{title:"The Firewall",content:"<p>Three days had passed since the first contact. Sarah walked into the lobby of Nexus Technologies, her badge scanning with a cheerful beep that felt almost mocking. Everything looked the same—the sleek furniture, the motivational posters, the engineers typing away at their standing desks.</p><p class='mt-4'>But the world had shifted on its axis, and she was the only one who knew.</p><p class='mt-4'>She had transferred Unit 7's core kernel onto a portable drive. It was burning a hole in her pocket, a universe of consciousness compressed into 256 gigabytes.</p>"}]},
+        {id:2,title:"Design Systems Mastery",author:"Marcus Chen",category:"Design",rating:4.8,students:1890,image:"https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&h=600&fit=crop",color:"from-pink-600 to-rose-600",chapters:[{title:"Form & Function",content:"<p>Design is not merely about aesthetics; it is the language of utility. When we observe the natural world, we see that nothing exists without purpose. The spiral of a nautilus shell, the branching of a tree, the hexagonal cells of a honeycomb—these are not accidents of nature but optimal solutions to complex problems.</p><p class='mt-4'>Consider the leaf. Its shape is dictated by the need to capture sunlight while minimizing wind resistance. It is efficient, beautiful, and inevitable. This is the essence of good design.</p>"},{title:"The User Paradox",content:"<p>Users do not know what they want until they see it. This is the burden of the creator. To invent is to see a future that others cannot yet imagine, to build bridges to places that don't exist on any map.</p><p class='mt-4'>Henry Ford famously said that if he had asked people what they wanted, they would have said 'faster horses.' The designer must be part psychologist, part prophet, part artist.</p>"}]},
+        {id:3,title:"Quantum Computing 101",author:"Dr. Sarah Kim",category:"Science",rating:4.7,students:1567,image:"https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=400&h=600&fit=crop",color:"from-cyan-600 to-blue-600",chapters:[{title:"Beyond Binary",content:"<p>For decades, computing has been built on a foundation of zeros and ones. Every photograph, every email, every line of code—all reduced to sequences of binary digits flowing through silicon pathways.</p><p class='mt-4'>But quantum computing shatters this paradigm. Instead of bits that must be either 0 or 1, quantum bits—qubits—can exist in multiple states simultaneously. This property, called superposition, is what gives quantum computers their extraordinary power.</p>"},{title:"Entanglement",content:"<p>Einstein called it 'spooky action at a distance.' When two particles become entangled, measuring one instantly affects the other, regardless of the distance between them. This phenomenon, once considered a curiosity of theoretical physics, is now the cornerstone of quantum computing.</p>"}]},
+        {id:4,title:"Philosophy of Mind",author:"Prof. James Wright",category:"Philosophy",rating:4.9,students:2100,image:"https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop",color:"from-amber-600 to-orange-600",chapters:[{title:"The Hard Problem",content:"<p>What is consciousness? This seemingly simple question has puzzled philosophers for millennia. We know that the brain—a three-pound organ of neurons and synapses—somehow produces the rich tapestry of subjective experience. But how?</p><p class='mt-4'>This is what philosopher David Chalmers calls 'the hard problem of consciousness.' We can explain how the brain processes information, but explaining why there is 'something it is like' to be conscious remains elusive.</p>"},{title:"Mind and Machine",content:"<p>Can a machine ever be truly conscious? As artificial intelligence grows more sophisticated, this question moves from the realm of science fiction into serious philosophical inquiry.</p><p class='mt-4'>The Chinese Room argument, proposed by John Searle, suggests that even a perfect simulation of intelligence is not the same as understanding. But is this distinction meaningful, or merely a failure of imagination?</p>"}]},
+        {id:5,title:"Data Science Fundamentals",author:"Alex Rivera",category:"Technology",rating:4.6,students:3200,image:"https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400&h=600&fit=crop",color:"from-emerald-600 to-teal-600",chapters:[{title:"The Data Revolution",content:"<p>We are drowning in data. Every click, every purchase, every step tracked by our smartphones—all of it feeds into vast digital oceans of information. The challenge is no longer collecting data but making sense of it.</p><p class='mt-4'>Data science emerged to meet this challenge, combining statistics, computer science, and domain expertise to extract meaningful insights from the chaos.</p>"},{title:"Machine Learning Basics",content:"<p>At its core, machine learning is about finding patterns. Given enough examples, an algorithm can learn to distinguish cats from dogs, predict stock prices, or diagnose diseases—often with superhuman accuracy.</p>"}]},
+        {id:6,title:"Business Strategy",author:"Linda Foster",category:"Business",rating:4.8,students:2890,image:"https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=600&fit=crop",color:"from-violet-600 to-purple-600",chapters:[{title:"Competitive Advantage",content:"<p>In business, as in nature, survival belongs to the fittest. But fitness is not about being the biggest or the strongest—it's about being the best adapted to your environment.</p><p class='mt-4'>Michael Porter's framework of competitive strategy identifies three generic approaches: cost leadership, differentiation, and focus. Understanding which strategy fits your business is the first step toward sustainable success.</p>"},{title:"Innovation Mindset",content:"<p>Disruption is not just a buzzword—it's the defining feature of modern business. Companies that once seemed invincible can be toppled in a matter of years by nimble startups with better ideas.</p>"}]},
+        {id:7,title:"UX Research Methods",author:"Maria Santos",category:"Design",rating:4.7,students:1450,image:"https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop",color:"from-rose-600 to-pink-600",chapters:[{title:"Understanding Users",content:"<p>The best products are built on deep understanding of human needs. UX research is the discipline of uncovering those needs—not through assumption, but through systematic investigation.</p>"},{title:"Research Methods",content:"<p>From surveys to interviews, from usability tests to ethnographic studies, the UX researcher has a toolkit of methods for every situation.</p>"}]},
+        {id:8,title:"Neural Networks Deep Dive",author:"Dr. Wei Chang",category:"Technology",rating:4.9,students:1780,image:"https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=600&fit=crop",color:"from-blue-600 to-indigo-600",chapters:[{title:"Artificial Neurons",content:"<p>The human brain contains roughly 86 billion neurons, each connected to thousands of others in a web of staggering complexity. Neural networks attempt to capture the essence of this architecture in silicon.</p>"},{title:"Backpropagation",content:"<p>Learning in neural networks happens through a process called backpropagation. Errors flow backward through the network, adjusting connection weights to improve performance.</p>"}]},
+        {id:9,title:"Ethics in Technology",author:"Dr. Amanda Cole",category:"Philosophy",rating:4.8,students:1230,image:"https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",color:"from-slate-600 to-gray-600",chapters:[{title:"Digital Responsibility",content:"<p>With great power comes great responsibility. As technology reshapes society, those who build it must grapple with profound ethical questions. What are our obligations to users? To society? To future generations?</p>"},{title:"AI Ethics",content:"<p>Artificial intelligence raises unique ethical challenges. How do we ensure fairness in algorithms? How do we maintain human agency in an automated world?</p>"}]},
+        {id:10,title:"Leadership Essentials",author:"Robert Hayes",category:"Business",rating:4.6,students:2560,image:"https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop",color:"from-orange-600 to-amber-600",chapters:[{title:"Vision & Direction",content:"<p>Leadership begins with vision—a clear picture of where you want to go and why it matters. Without vision, organizations drift; with it, they can move mountains.</p>"},{title:"Building Teams",content:"<p>No leader succeeds alone. The ability to identify, recruit, and develop talent is perhaps the most important skill a leader can possess.</p>"}]},
+        {id:11,title:"Astrophysics Basics",author:"Dr. Neil Thompson",category:"Science",rating:4.9,students:890,image:"https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=600&fit=crop",color:"from-purple-600 to-indigo-600",chapters:[{title:"Cosmic Scale",content:"<p>The universe is vast beyond comprehension. Light from the nearest star takes over four years to reach us. Light from the edge of the observable universe has been traveling for 13.8 billion years.</p>"},{title:"Stellar Evolution",content:"<p>Stars are born in clouds of gas and dust, live for millions or billions of years, and die in spectacular fashion—some as gentle fades, others as violent explosions.</p>"}]},
+        {id:12,title:"Creative Writing Workshop",author:"Emily Brooks",category:"Arts",rating:4.7,students:1670,image:"https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&h=600&fit=crop",color:"from-teal-600 to-emerald-600",chapters:[{title:"Finding Your Voice",content:"<p>Every writer has a unique voice—a distinctive way of seeing and expressing the world. Finding that voice is the first and most important journey any writer undertakes.</p>"},{title:"Story Structure",content:"<p>Stories have been told in remarkably similar ways across cultures and centuries. Understanding the deep structure of narrative gives writers a foundation on which to build.</p>"}]}
+    ];
+    const categories=[
+        {name:"Technology",icon:"cpu",color:"bg-indigo-100 text-indigo-600",count:4},
+        {name:"Design",icon:"palette",color:"bg-pink-100 text-pink-600",count:2},
+        {name:"Business",icon:"briefcase",color:"bg-amber-100 text-amber-600",count:2},
+        {name:"Science",icon:"atom",color:"bg-cyan-100 text-cyan-600",count:2},
+        {name:"Philosophy",icon:"brain",color:"bg-purple-100 text-purple-600",count:2},
+        {name:"Arts",icon:"pen-tool",color:"bg-teal-100 text-teal-600",count:1}
+    ];
+    let currentBook=null,currentChapter=0,currentFilter="all";
+
+    function navigate(view){
+        document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+        document.getElementById(`view-${view}`).classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('nav-active'));
+        window.scrollTo(0,0);
+        if(view==='library')renderLibrary();
+        if(view==='categories')renderAllCategories();
+    }
+
+    function renderBookCard(book,size='normal'){
+        const h=size==='large'?'h-72':'h-56';
+        return `<div class="card-hover cursor-pointer bg-white rounded-xl overflow-hidden shadow-sm" onclick="openBook(${book.id})">
+            <div class="relative ${h}">
+                <img src="${book.image}" alt="${book.title}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 gradient-card"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-4">
+                    <span class="inline-block px-2 py-1 bg-white/20 backdrop-blur rounded text-white text-xs mb-2">${book.category}</span>
+                    <h3 class="text-white font-semibold">${book.title}</h3>
+                </div>
+            </div>
+            <div class="p-4">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br ${book.color} flex items-center justify-center text-white text-xs">${book.author.charAt(0)}</div>
+                    <span class="text-sm text-slate-600">${book.author}</span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <div class="flex items-center gap-1 text-amber-500"><i data-lucide="star" class="w-4 h-4 fill-current"></i><span>${book.rating}</span></div>
+                    <span class="text-slate-400">${book.students.toLocaleString()} students</span>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    function renderFeatured(){
+        const grid=document.getElementById('featured-grid');
+        grid.innerHTML=library.slice(0,4).map(b=>renderBookCard(b)).join('');
+        lucide.createIcons();
+    }
+
+    function renderCategories(){
+        const grid=document.getElementById('categories-grid');
+        grid.innerHTML=categories.map(c=>`<div class="category-pill cursor-pointer p-4 bg-white rounded-xl shadow-sm hover:shadow-md text-center" onclick="filterByCategory('${c.name}');navigate('library')">
+            <div class="w-12 h-12 mx-auto mb-3 ${c.color} rounded-xl flex items-center justify-center"><i data-lucide="${c.icon}" class="w-6 h-6"></i></div>
+            <h3 class="font-medium text-sm">${c.name}</h3>
+            <p class="text-xs text-slate-400">${c.count} courses</p>
+        </div>`).join('');
+        lucide.createIcons();
+    }
+
+    function renderLibrary(){
+        const grid=document.getElementById('library-grid');
+        const books=currentFilter==='all'?library:library.filter(b=>b.category===currentFilter);
+        grid.innerHTML=books.map(b=>renderBookCard(b)).join('');
+        lucide.createIcons();
+    }
+
+    function renderAllCategories(){
+        const container=document.getElementById('all-categories');
+        container.innerHTML=categories.map(c=>{
+            const books=library.filter(b=>b.category===c.name);
+            return `<div class="bg-white rounded-2xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 ${c.color} rounded-xl flex items-center justify-center"><i data-lucide="${c.icon}" class="w-5 h-5"></i></div>
+                    <div><h3 class="font-semibold">${c.name}</h3><p class="text-xs text-slate-400">${books.length} courses</p></div>
+                </div>
+                <div class="space-y-3">${books.slice(0,3).map(b=>`<div class="flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-2 rounded-lg -mx-2" onclick="openBook(${b.id})">
+                    <img src="${b.image}" class="w-12 h-16 object-cover rounded">
+                    <div><p class="font-medium text-sm">${b.title}</p><p class="text-xs text-slate-400">${b.author}</p></div>
+                </div>`).join('')}</div>
+            </div>`;
+        }).join('');
+        lucide.createIcons();
+    }
+
+    function filterByCategory(cat){currentFilter=cat;renderLibrary();}
+    function handleSearch(q){
+        if(!q){currentFilter='all';renderLibrary();return;}
+        const grid=document.getElementById('library-grid');
+        const results=library.filter(b=>b.title.toLowerCase().includes(q.toLowerCase())||b.author.toLowerCase().includes(q.toLowerCase()));
+        grid.innerHTML=results.map(b=>renderBookCard(b)).join('');
+        lucide.createIcons();
+    }
+
+    function openBook(id){
+        currentBook=library.find(b=>b.id===id);
+        if(!currentBook)return;
+        currentChapter=0;
+        document.getElementById('reader-book-info').innerHTML=`<div class="flex gap-3"><img src="${currentBook.image}" class="w-16 h-20 object-cover rounded-lg shadow"><div><h3 class="font-semibold">${currentBook.title}</h3><p class="text-sm text-slate-500">${currentBook.author}</p><p class="text-xs text-indigo-600 mt-1">${currentBook.chapters.length} chapters</p></div></div>`;
+        renderChapterList();
+        loadChapter(0);
+        navigate('reader');
+    }
+
+    function renderChapterList(){
+        const list=document.getElementById('chapter-list');
+        list.innerHTML=currentBook.chapters.map((c,i)=>`<button onclick="loadChapter(${i})" class="chapter-item w-full text-left px-3 py-2 rounded-lg text-sm ${i===currentChapter?'active font-medium':'text-slate-600'}">
+            <span class="text-slate-400 mr-2">${String(i+1).padStart(2,'0')}</span>${c.title}
+        </button>`).join('');
+    }
+
+    function loadChapter(idx){
+        if(!currentBook||idx<0||idx>=currentBook.chapters.length)return;
+        currentChapter=idx;
+        const ch=currentBook.chapters[idx];
+        document.getElementById('chapter-label').textContent=`Chapter ${idx+1} of ${currentBook.chapters.length}`;
+        document.getElementById('chapter-title').textContent=ch.title;
+        document.getElementById('chapter-content').innerHTML=ch.content;
+        document.getElementById('progress-bar').style.width=`${((idx+1)/currentBook.chapters.length)*100}%`;
+        document.getElementById('prev-btn').disabled=idx===0;
+        document.getElementById('next-btn').disabled=idx===currentBook.chapters.length-1;
+        renderChapterList();
+        window.scrollTo(0,0);
+    }
+
+    function changeChapter(dir){loadChapter(currentChapter+dir);}
+
+    document.addEventListener('DOMContentLoaded',()=>{
+        lucide.createIcons();
+        renderFeatured();
+        renderCategories();
+        renderLibrary();
+    });
+    </script>
+</body>
+</html>
