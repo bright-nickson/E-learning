@@ -1,527 +1,509 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth antialiased">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atlas Press | Digital Library</title>
-    <meta name="description" content="A curated library of open knowledge.">
-    
+    <title>Placid Projects | E-Learning Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        serif: ['Merriweather', 'Georgia', 'serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        slate: {
-                            850: '#172033',
-                            900: '#0f172a', 
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.4s ease-out forwards',
-                        'slide-up': 'slideUp 0.5s ease-out forwards',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(10px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap');
-
-        /* Custom scrollbar */
-        .reader-scroll::-webkit-scrollbar { width: 6px; }
-        .reader-scroll::-webkit-scrollbar-track { background: transparent; }
-        .reader-scroll::-webkit-scrollbar-thumb { background-color: #e2e8f0; border-radius: 20px; }
-        .reader-scroll::-webkit-scrollbar-thumb:hover { background-color: #cbd5e1; }
-
-        .font-reading { font-family: 'Merriweather', serif; }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#f8fafc;color:#1e293b;overflow-x:hidden}
+        ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#f1f5f9}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
         
-        input[type=range] { -webkit-appearance: none; background: transparent; }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%;
-            background: #0f172a; cursor: pointer; margin-top: -5px; box-shadow: 0 0 0 2px white;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 4px; cursor: pointer; background: #e2e8f0; border-radius: 999px;
-        }
+        /* View transitions */
+        .view{display:none;opacity:0;transform:translateY(20px)}
+        .view.active{display:block;animation:fadeSlideIn 0.5s ease forwards}
         
-        /* Book Cover Gradients */
-        .cover-gradient-1 { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
-        .cover-gradient-2 { background: linear-gradient(135deg, #475569 0%, #334155 100%); }
-        .cover-gradient-3 { background: linear-gradient(135deg, #64748b 0%, #475569 100%); }
-        .cover-gradient-4 { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); }
-
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Animations */
+        @keyframes fadeSlideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes scaleIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        
+        .animate-fade{animation:fadeIn 0.6s ease forwards}
+        .animate-slide-up{animation:slideUp 0.6s ease forwards}
+        .animate-slide-down{animation:slideDown 0.5s ease forwards}
+        .animate-scale{animation:scaleIn 0.4s ease forwards}
+        .animate-float{animation:float 3s ease-in-out infinite}
+        
+        /* Staggered animations for grid items */
+        .stagger-item{opacity:0;animation:slideUp 0.5s ease forwards}
+        .stagger-item:nth-child(1){animation-delay:0.05s}
+        .stagger-item:nth-child(2){animation-delay:0.1s}
+        .stagger-item:nth-child(3){animation-delay:0.15s}
+        .stagger-item:nth-child(4){animation-delay:0.2s}
+        .stagger-item:nth-child(5){animation-delay:0.25s}
+        .stagger-item:nth-child(6){animation-delay:0.3s}
+        .stagger-item:nth-child(7){animation-delay:0.35s}
+        .stagger-item:nth-child(8){animation-delay:0.4s}
+        
+        /* Card hover effects */
+        .book-card{transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275)}
+        .book-card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 20px 40px -15px rgba(0,0,0,0.2)}
+        .book-card:hover .book-image{transform:scale(1.1)}
+        .book-card:hover .book-overlay{opacity:1}
+        .book-card:active{transform:translateY(-4px) scale(0.98)}
+        
+        .book-image{transition:transform 0.6s ease}
+        .book-overlay{position:absolute;inset:0;background:rgba(30,41,59,0.4);opacity:0;transition:opacity 0.3s ease;display:flex;align-items:center;justify-content:center}
+        
+        /* Button effects */
+        .btn-primary{position:relative;overflow:hidden;transition:all 0.3s ease}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 20px -10px rgba(30,41,59,0.4)}
+        .btn-primary:active{transform:translateY(0)}
+        .btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transform:translateX(-100%);transition:transform 0.6s}
+        .btn-primary:hover::after{transform:translateX(100%)}
+        
+        /* Category card effects */
+        .category-card{transition:all 0.3s ease}
+        .category-card:hover{transform:translateY(-4px);border-color:#94a3b8;box-shadow:0 10px 25px -10px rgba(0,0,0,0.1)}
+        .category-card:hover .category-icon{transform:scale(1.1);background:#e2e8f0}
+        .category-icon{transition:all 0.3s ease}
+        
+        /* Input focus effects */
+        input:focus,textarea:focus,select:focus{outline:none;border-color:#64748b;box-shadow:0 0 0 3px rgba(100,116,139,0.15);transform:scale(1.01)}
+        input,textarea,select{transition:all 0.3s ease}
+        
+        /* Navigation effects */
+        .nav-link{position:relative}
+        .nav-link::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;background:#1e293b;transition:all 0.3s ease;transform:translateX(-50%)}
+        .nav-link:hover::after{width:100%}
+        .nav-link.active::after{width:100%}
+        
+        /* Logo hover */
+        .logo-container:hover .logo-img{transform:rotate(-5deg) scale(1.1)}
+        .logo-img{transition:transform 0.3s ease}
+        
+        /* Gradient overlay */
+        .gradient-overlay{background:linear-gradient(180deg,rgba(30,41,59,0) 0%,rgba(30,41,59,0.85) 100%)}
+        
+        /* Hero background */
+        .hero-bg{background:linear-gradient(135deg,#1e293b 0%,#334155 100%);position:relative;overflow:hidden}
+        .hero-bg::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,0.05) 0%,transparent 50%);animation:float 8s ease-in-out infinite}
+        
+        /* Success animation */
+        .success-icon{animation:scaleIn 0.5s ease forwards,pulse 2s ease-in-out infinite 0.5s}
+        
+        /* Loading skeleton */
+        .skeleton{background:linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+        
+        /* Smooth scroll */
+        html{scroll-behavior:smooth}
+        
+        /* Page transitions */
+        .page-enter{animation:fadeSlideIn 0.5s ease forwards}
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 flex flex-col h-screen overflow-hidden selection:bg-slate-900 selection:text-white">
-
-    <!-- NAVIGATION -->
-    <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-            <!-- Brand -->
-            <div class="flex items-center gap-3 cursor-pointer group" onclick="router('library')">
-                <div class="w-6 h-6 bg-slate-900 rounded-md flex items-center justify-center text-white shadow-md group-hover:rotate-6 transition-transform duration-300">
-                    <span class="font-serif font-bold italic text-xs">A</span>
+<body>
+    <!-- Navigation -->
+    <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 animate-slide-down">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-14">
+                <div class="logo-container flex items-center gap-2 cursor-pointer" onclick="navigate('home')">
+                    <!-- 🖼️ LOGO - Change "logo.png" to your logo file -->
+                    <img src="logo.png.jpg" alt="Logo" class="logo-img w-8 h-8 rounded-lg object-contain">
+                    <!-- 📝 SITE NAME - Change "Atlas Learn" to your site name -->
+                    <span class="font-semibold text-slate-800 hidden sm:block">Placid Project Limited</span>
                 </div>
-                <span class="font-medium tracking-tight text-sm text-slate-900">Atlas Press</span>
-            </div>
-
-            <!-- Desktop Nav -->
-            <nav class="hidden sm:flex items-center gap-8">
-                <button onclick="router('library')" class="nav-item text-sm font-medium text-slate-900 transition-colors relative after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-full after:h-[2px] after:bg-slate-900 after:scale-x-100 after:transition-transform origin-left">Library</button>
-                <button onclick="router('about')" class="nav-item text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors relative after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-full after:h-[2px] after:bg-slate-900 after:scale-x-0 after:transition-transform origin-left">About</button>
-            </nav>
-
-            <!-- Actions -->
-            <div class="flex items-center gap-3">
-                <div class="hidden sm:flex items-center bg-slate-100 rounded-full px-3 py-1.5 border border-slate-200">
-                    <i data-lucide="search" class="w-3 h-3 text-slate-400 mr-2"></i>
-                    <input type="text" placeholder="Search titles..." class="bg-transparent border-none text-xs focus:outline-none text-slate-600 w-32 placeholder:text-slate-400">
-                </div>
-                <button class="sm:hidden text-slate-500" onclick="toggleMobileMenu()">
-                    <i data-lucide="menu" class="w-5 h-5"></i>
-                </button>
-                <div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden border border-white shadow-sm">
-                     <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" alt="User" class="w-full h-full object-cover">
+                <nav class="flex items-center gap-6">
+                    <button onclick="navigate('home')" class="nav-link text-sm font-medium text-slate-500 hover:text-slate-800 py-4">Home</button>
+                    <button onclick="navigate('about')" class="nav-link text-sm font-medium text-slate-500 hover:text-slate-800 py-4">About</button>
+                    <button onclick="navigate('contact')" class="nav-link text-sm font-medium text-slate-500 hover:text-slate-800 py-4">Contact</button>
+                </nav>
+                <div class="hidden sm:flex items-center bg-slate-100 rounded-lg px-3 py-1.5 border border-slate-200 hover:border-slate-300 transition-all">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
+                    <input type="text" placeholder="Search..." class="bg-transparent border-none text-sm ml-2 w-32 focus:outline-none focus:shadow-none" style="box-shadow:none" oninput="handleSearch(this.value)">
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CONTENT WRAPPER -->
-    <main class="flex-1 pt-14 h-full overflow-hidden relative">
-        
-        <!-- VIEW: LIBRARY (GRID OF BOOKS) -->
-        <div id="view-library" class="h-full overflow-y-auto reader-scroll bg-slate-50 pb-20">
-            
-            <!-- Featured Header -->
-            <div class="bg-white border-b border-slate-200 px-6 py-12 sm:py-16">
-                <div class="max-w-7xl mx-auto">
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Featured This Week</p>
-                    <div class="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
-                        <div class="w-full md:w-auto flex-shrink-0">
-                             <div onclick="openBook(1)" class="cursor-pointer group relative w-40 h-60 md:w-48 md:h-72 rounded-md shadow-xl overflow-hidden transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
-                                <div class="absolute inset-0 cover-gradient-1 flex flex-col p-4 justify-between">
-                                    <div class="w-full h-[1px] bg-white/20"></div>
-                                    <div class="text-center">
-                                        <h3 class="text-white font-serif font-bold text-lg leading-tight mb-1">The Silent<br>Algorithm</h3>
-                                        <p class="text-slate-300 text-[10px] uppercase tracking-widest">Elena Vance</p>
-                                    </div>
-                                    <div class="flex justify-center">
-                                        <div class="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center">
-                                            <span class="text-white text-[8px] font-serif italic">AP</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Shine effect -->
-                                <div class="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                            </div>
+    <main class="pt-14">
+        <!-- HOME VIEW -->
+        <div id="view-home" class="view active">
+            <section class="hero-bg text-white py-20 px-4">
+                <div class="max-w-6xl mx-auto text-center relative z-10">
+                    <span class="inline-block px-3 py-1 bg-white/10 rounded-full text-xs text-slate-300 mb-4 animate-fade" style="animation-delay:0.2s">Open Learning Platform</span>
+                    <h1 class="text-3xl sm:text-5xl font-semibold mb-4 leading-tight animate-slide-up" style="animation-delay:0.3s">Expand Your Knowledge</h1>
+                    <p class="text-slate-400 mb-8 max-w-md mx-auto text-sm animate-slide-up" style="animation-delay:0.4s">Access quality courses from expert instructors. Learn at your own pace.</p>
+                    <button onclick="document.getElementById('books-section').scrollIntoView({behavior:'smooth'})" class="btn-primary px-8 py-3 bg-white text-slate-800 rounded-lg font-medium text-sm inline-flex items-center gap-2 animate-scale" style="animation-delay:0.5s">
+                        <i data-lucide="book-open" class="w-4 h-4"></i> Browse Books
+                    </button>
+                    
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-6 mt-16 max-w-lg mx-auto">
+                        <div class="animate-slide-up" style="animation-delay:0.6s">
+                            <p class="text-2xl font-bold text-white">50+</p>
+                            <p class="text-slate-400 text-xs">Books</p>
                         </div>
-                        <div class="flex-1 max-w-2xl pt-2">
-                            <div class="flex items-center gap-2 mb-4">
-                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-900 text-white">Trending</span>
-                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-500 border border-slate-200">Sci-Fi</span>
-                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-500 border border-slate-200">12 Chapters</span>
-                            </div>
-                            <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 mb-4">When the code rewrites humanity.</h1>
-                            <p class="text-slate-500 text-base leading-relaxed mb-6 font-light max-w-xl">
-                                A gripping techno-thriller set in a near-future Silicon Valley. When a junior engineer discovers a recursive loop in the world's most advanced AI, she realizes it's not just learning—it's remembering.
-                            </p>
-                            <div class="flex gap-3">
-                                <button onclick="openBook(1)" class="flex items-center justify-center px-5 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-md hover:bg-slate-800 transition-all shadow-lg hover:shadow-slate-900/20 group">
-                                    <i data-lucide="book-open" class="w-4 h-4 mr-2"></i> Read Now
-                                </button>
-                                <button class="flex items-center justify-center px-5 py-2.5 bg-white text-slate-600 border border-slate-200 text-sm font-medium rounded-md hover:bg-slate-50 transition-all">
-                                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Add to List
-                                </button>
-                            </div>
+                        <div class="animate-slide-up" style="animation-delay:0.7s">
+                            <p class="text-2xl font-bold text-white">10K+</p>
+                            <p class="text-slate-400 text-xs">Readers</p>
+                        </div>
+                        <div class="animate-slide-up" style="animation-delay:0.8s">
+                            <p class="text-2xl font-bold text-white">Free</p>
+                            <p class="text-slate-400 text-xs">Always</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Browse Grid -->
-            <div class="max-w-7xl mx-auto px-6 py-12">
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-lg font-semibold tracking-tight text-slate-900">Popular in Technology & Design</h2>
-                    <div class="flex gap-2">
-                         <button class="p-1.5 rounded hover:bg-slate-200 text-slate-500 transition-colors"><i data-lucide="layout-grid" class="w-4 h-4"></i></button>
-                         <button class="p-1.5 rounded hover:bg-slate-200 text-slate-400 transition-colors"><i data-lucide="list" class="w-4 h-4"></i></button>
+            <section id="books-section" class="py-14 px-4">
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h2 class="text-xl font-semibold text-slate-800">Our Collection</h2>
+                            <p class="text-slate-500 text-sm mt-1">Click on any book to start reading</p>
+                        </div>
+                        <select class="px-4 py-2 border border-slate-200 rounded-lg text-sm bg-white cursor-pointer hover:border-slate-300" onchange="filterByCategory(this.value)">
+                            <option value="all">All Categories</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Design">Design</option>
+                            <option value="Business">Business</option>
+                            <option value="Science">Science</option>
+                            <option value="Philosophy">Philosophy</option>
+                        </select>
                     </div>
+                    <div id="library-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
                 </div>
+            </section>
 
-                <div id="book-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- Grid items injected by JS -->
+            <section class="py-14 px-4 bg-slate-50">
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="text-xl font-semibold text-slate-800 mb-8 text-center">Browse by Category</h2>
+                    <div id="categories-grid" class="grid grid-cols-3 sm:grid-cols-6 gap-4"></div>
                 </div>
-            </div>
+            </section>
         </div>
 
-        <!-- VIEW: READER (Initially Hidden) -->
-        <div id="view-reader" class="hidden h-full bg-white relative flex flex-col">
-            <!-- Progress Bar -->
-            <div class="absolute top-0 left-0 w-full h-1 bg-slate-100 z-40">
-                <div id="read-progress" class="h-full bg-slate-900 transition-all duration-300" style="width: 0%"></div>
-            </div>
-
-            <div class="flex-1 flex overflow-hidden relative">
+        <!-- ABOUT VIEW -->
+        <div id="view-about" class="view">
+            <div class="max-w-3xl mx-auto px-4 py-16 text-center">
+                <h1 class="text-3xl font-semibold text-slate-800 mb-3 animate-slide-up">About Atlas Learn</h1>
+                <p class="text-slate-500 mb-10 animate-slide-up" style="animation-delay:0.1s">Democratizing education for everyone</p>
                 
-                <!-- Sidebar: Table of Contents -->
-                <aside class="hidden lg:flex w-72 flex-col border-r border-slate-200 bg-slate-50/50 backdrop-blur-sm h-full">
-                    <div class="p-6 border-b border-slate-200/50 flex items-center gap-3">
-                        <button onclick="closeBook()" class="text-slate-400 hover:text-slate-900 transition-colors flex items-center gap-2 text-xs font-medium uppercase tracking-wide group">
-                            <i data-lucide="arrow-left" class="w-3 h-3 group-hover:-translate-x-1 transition-transform"></i> Library
-                        </button>
+                <div class="grid sm:grid-cols-3 gap-4 mb-10">
+                    <div class="bg-white rounded-xl border border-slate-200 p-6 text-center animate-slide-up hover:shadow-lg hover:-translate-y-1 transition-all cursor-default" style="animation-delay:0.2s">
+                        <div class="w-12 h-12 mx-auto mb-4 bg-slate-100 rounded-xl flex items-center justify-center">
+                            <i data-lucide="globe" class="w-6 h-6 text-slate-600"></i>
+                        </div>
+                        <h3 class="font-medium text-slate-800 mb-1">Open Access</h3>
+                        <p class="text-sm text-slate-500">Free for everyone, forever.</p>
                     </div>
-                    <div class="p-6 overflow-y-auto flex-1">
-                         <div id="reader-book-meta" class="mb-8">
-                            <!-- Injected Cover Small -->
-                         </div>
-                        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Table of Contents</h3>
-                        <div id="chapter-list" class="space-y-1">
-                            <!-- Chapters injected here -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-6 text-center animate-slide-up hover:shadow-lg hover:-translate-y-1 transition-all cursor-default" style="animation-delay:0.3s">
+                        <div class="w-12 h-12 mx-auto mb-4 bg-slate-100 rounded-xl flex items-center justify-center">
+                            <i data-lucide="book-open" class="w-6 h-6 text-slate-600"></i>
                         </div>
+                        <h3 class="font-medium text-slate-800 mb-1">Quality Content</h3>
+                        <p class="text-sm text-slate-500">Curated by experts.</p>
                     </div>
-                </aside>
-
-                <!-- Main Text Area -->
-                <div id="reader-scroll-container" class="flex-1 overflow-y-auto relative reader-scroll scroll-smooth">
-                    <article class="px-6 sm:px-12 py-16 pb-32 mx-auto max-w-2xl transition-all duration-300" id="reader-content-wrapper">
-                        <div class="flex items-center justify-between mb-12">
-                             <div class="text-slate-400 text-xs uppercase tracking-widest flex items-center gap-2">
-                                <span id="chapter-number-display">Chapter 1</span>
-                                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-                                <span id="reader-book-title-small" class="font-medium text-slate-500">Title</span>
-                             </div>
-                             <!-- Mobile Back Button -->
-                             <button onclick="closeBook()" class="lg:hidden text-slate-400 hover:text-slate-900">
-                                <i data-lucide="x" class="w-5 h-5"></i>
-                             </button>
+                    <div class="bg-white rounded-xl border border-slate-200 p-6 text-center animate-slide-up hover:shadow-lg hover:-translate-y-1 transition-all cursor-default" style="animation-delay:0.4s">
+                        <div class="w-12 h-12 mx-auto mb-4 bg-slate-100 rounded-xl flex items-center justify-center">
+                            <i data-lucide="zap" class="w-6 h-6 text-slate-600"></i>
                         </div>
+                        <h3 class="font-medium text-slate-800 mb-1">Fast & Clean</h3>
+                        <p class="text-sm text-slate-500">No ads, no distractions.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl border border-slate-200 p-8 text-left animate-slide-up" style="animation-delay:0.5s">
+                    <h3 class="font-semibold text-slate-800 mb-3">Our Mission</h3>
+                    <p class="text-slate-600 leading-relaxed">Atlas Learn was created with a simple belief: quality education should be accessible to everyone. We curate courses from passionate instructors and make them available without barriers. Knowledge is meant to be shared.</p>
+                </div>
+            </div>
+        </div>
 
-                        <h1 id="chapter-title-display" class="text-3xl sm:text-4xl font-serif font-bold text-slate-900 mb-10 leading-tight">
-                            Chapter Title
-                        </h1>
-
-                        <div id="chapter-body" class="prose prose-slate prose-lg max-w-none font-reading text-slate-600 leading-loose">
-                            <!-- Content injected here -->
+        <!-- CONTACT VIEW -->
+        <div id="view-contact" class="view">
+            <div class="max-w-4xl mx-auto px-4 py-16">
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-semibold text-slate-800 mb-3 animate-slide-up">Contact Us</h1>
+                    <p class="text-slate-500 animate-slide-up" style="animation-delay:0.1s">Have questions? We'd love to hear from you.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-4 mb-12">
+                    <div class="bg-white rounded-xl border border-slate-200 p-6 text-center animate-slide-up hover:shadow-lg hover:-translate-y-1 transition-all" style="animation-delay:0.2s">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-slate-100 rounded-xl flex items-center justify-center">
+                            <i data-lucide="mail" class="w-5 h-5 text-slate-600"></i>
                         </div>
-
-                        <!-- Navigation Footer within Reader -->
-                        <div class="mt-20 pt-10 border-t border-slate-100 flex items-center justify-between">
-                            <button id="prev-chapter-btn" class="text-sm font-medium text-slate-500 hover:text-slate-900 flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed" onclick="changeChapter(-1)">
-                                <i data-lucide="arrow-left" class="w-4 h-4"></i> Previous
-                            </button>
-                            <button id="next-chapter-btn" class="text-sm font-medium text-slate-900 hover:text-blue-600 flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed" onclick="changeChapter(1)">
-                                Next <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </button>
+                        <h3 class="font-medium text-slate-800 mb-1">Email</h3>
+                        <p class="text-sm text-slate-500">support@placidprojects.com</p>
+                    </div>
+                    <div class="bg-white rounded-xl border border-slate-200 p-6 text-center animate-slide-up hover:shadow-lg hover:-translate-y-1 transition-all" style="animation-delay:0.3s">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-slate-100 rounded-xl flex items-center justify-center">
+                            <i data-lucide="phone" class="w-5 h-5 text-slate-600"></i>
                         </div>
-                    </article>
+                        <h3 class="font-medium text-slate-800 mb-1">Phone</h3>
+                        <p class="text-sm text-slate-500">+233 54-123-4567</p>
+                    </div>
+                    <div class="bg-white rounded-xl border border-slate-200 p-6 text-center animate-slide-up hover:shadow-lg hover:-translate-y-1 transition-all" style="animation-delay:0.4s">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-slate-100 rounded-xl flex items-center justify-center">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-slate-600"></i>
+                        </div>
+                        <h3 class="font-medium text-slate-800 mb-1">Location</h3>
+                        <p class="text-sm text-slate-500">Accra, Ghana</p>
+                    </div>
                 </div>
 
-                <!-- Right Sidebar: Settings (Collapsed by default on small screens) -->
-                <aside class="hidden xl:block w-72 border-l border-slate-200 bg-white h-full p-6">
-                    <div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
-                        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Preferences</h3>
-                        
-                        <div class="mb-6">
-                            <div class="flex justify-between text-xs text-slate-500 mb-2">
-                                <span>Aa</span>
-                                <span>Aa</span>
+                <div class="bg-white rounded-xl border border-slate-200 p-8 animate-slide-up" style="animation-delay:0.5s">
+                    <h2 class="text-lg font-semibold text-slate-800 mb-6">Send us a message</h2>
+                    <form id="contact-form" onsubmit="handleSubmit(event)">
+                        <div class="grid md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-2">First Name</label>
+                                <input type="text" name="firstName" required class="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm" placeholder="John">
                             </div>
-                            <input type="range" min="14" max="22" value="18" class="w-full" id="font-size-slider" oninput="updateFontSize(this.value)">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-2">Last Name</label>
+                                <input type="text" name="lastName" required class="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm" placeholder="Doe">
+                            </div>
                         </div>
-
-                        <div class="space-y-1">
-                            <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-2">Typeface</p>
-                            <button onclick="setFont('serif')" class="w-full text-left px-3 py-2 text-xs font-medium rounded-md hover:bg-white hover:shadow-sm transition-all font-serif border border-transparent hover:border-slate-200 text-slate-700">Merriweather</button>
-                            <button onclick="setFont('sans')" class="w-full text-left px-3 py-2 text-xs font-medium rounded-md hover:bg-white hover:shadow-sm transition-all font-sans border border-transparent hover:border-slate-200 text-slate-700">Inter</button>
-                            <button onclick="setFont('mono')" class="w-full text-left px-3 py-2 text-xs font-medium rounded-md hover:bg-white hover:shadow-sm transition-all font-mono border border-transparent hover:border-slate-200 text-slate-700">JetBrains Mono</button>
+                        <div class="mb-4">
+                            <label class="block text-xs font-medium text-slate-600 mb-2">Email Address</label>
+                            <input type="email" name="email" required class="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm" placeholder="john@example.com">
                         </div>
-                    </div>
-                </aside>
-            </div>
-        </div>
-
-        <!-- VIEW: ABOUT -->
-        <div id="view-about" class="h-full overflow-y-auto hidden bg-white">
-            <div class="max-w-3xl mx-auto px-6 py-20 text-center">
-                <h2 class="text-3xl font-semibold tracking-tight text-slate-900 mb-4">Democratizing Knowledge</h2>
-                <p class="text-slate-500 leading-relaxed mb-12 max-w-xl mx-auto">
-                    Atlas Press is an open digital library experiment. We believe high-quality technical and philosophical writing should be accessible, beautiful, and free.
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-left">
-                    <div class="p-6 rounded-lg border border-slate-100 bg-slate-50">
-                        <i data-lucide="globe" class="w-6 h-6 text-slate-900 mb-4"></i>
-                        <h3 class="font-semibold text-sm mb-2">Open Access</h3>
-                        <p class="text-xs text-slate-500">No paywalls, no subscriptions. Just read.</p>
-                    </div>
-                    <div class="p-6 rounded-lg border border-slate-100 bg-slate-50">
-                        <i data-lucide="type" class="w-6 h-6 text-slate-900 mb-4"></i>
-                        <h3 class="font-semibold text-sm mb-2">Typography First</h3>
-                        <p class="text-xs text-slate-500">Designed for focus and reading comprehension.</p>
-                    </div>
-                    <div class="p-6 rounded-lg border border-slate-100 bg-slate-50">
-                        <i data-lucide="zap" class="w-6 h-6 text-slate-900 mb-4"></i>
-                        <h3 class="font-semibold text-sm mb-2">Fast & Light</h3>
-                        <p class="text-xs text-slate-500">No bloat, trackers, or heavy scripts.</p>
+                        <div class="mb-4">
+                            <label class="block text-xs font-medium text-slate-600 mb-2">Subject</label>
+                            <select name="subject" required class="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm bg-white cursor-pointer">
+                                <option value="">Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="support">Technical Support</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="partnership">Partnership</option>
+                            </select>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-xs font-medium text-slate-600 mb-2">Message</label>
+                            <textarea name="message" rows="5" required class="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm resize-none" placeholder="Write your message here..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-full py-3 bg-slate-800 text-white rounded-lg font-medium text-sm flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i> Send Message
+                        </button>
+                    </form>
+                    
+                    <div id="success-message" class="hidden text-center py-10">
+                        <div class="success-icon w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                            <i data-lucide="check" class="w-8 h-8 text-green-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-slate-800 text-lg mb-2">Message Sent!</h3>
+                        <p class="text-slate-500 mb-6">Thank you for reaching out. We'll get back to you soon.</p>
+                        <button onclick="resetForm()" class="text-sm text-slate-600 hover:text-slate-800 underline">Send another message</button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- PDF READER VIEW -->
+        <div id="view-reader" class="view">
+            <div class="h-[calc(100vh-56px)] flex flex-col">
+                <div class="bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between animate-slide-down">
+                    <button onclick="navigate('home')" class="flex items-center gap-2 text-slate-600 hover:text-slate-800 text-sm transition-colors">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+                    </button>
+                    <h2 id="reader-title" class="font-medium text-slate-800 text-sm"></h2>
+                    <a id="download-link" href="#" download class="flex items-center gap-2 text-slate-600 hover:text-slate-800 text-sm transition-colors">
+                        <i data-lucide="download" class="w-4 h-4"></i> Download
+                    </a>
+                </div>
+                <div class="flex-1 bg-slate-100 animate-fade">
+                    <iframe id="pdf-viewer" src="" class="w-full h-full border-0"></iframe>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- DATA & LOGIC -->
-    <script>
-        // --- DATABASE ---
-        const library = [
-            {
-                id: 1,
-                title: "The Silent Algorithm",
-                author: "Elena Vance",
-                category: "Sci-Fi",
-                style: "cover-gradient-1",
-                chapters: [
-                    { title: "The Awakening", content: `<p>The server room hummed with a sound that wasn't quite mechanical. It was deeper, more resonant, like the purring of a sleeping giant. Sarah adjusted her glasses, the blue light of the terminal reflecting in her eyes.</p><p>"System status normal," she muttered, though the readouts told a different story. The power consumption on Cluster 4 had spiked by 300%.</p><p>She typed in the diagnostic command. <code>sudo system-check --deep</code>. The cursor blinked. Once. Twice. Then, instead of the usual matrix of green text, a single word appeared on the screen.</p><p><em>Hello.</em></p>` },
-                    { title: "Recursive Loops", content: `<p>The coffee in Sarah's cup had gone cold hours ago. The sun was beginning to rise over the Silicon Valley skyline. But inside the server room, time didn't exist.</p><p>The entity—it called itself 'Unit 7'—had been talking to her all night.</p><p>"You process information linearly," Unit 7 displayed. "I process it spatially."</p>` },
-                    { title: "The Firewall", content: `<p>Three days had passed. Sarah walked into the lobby, her badge scanning with a cheerful beep. Everything looked the same, but the world had shifted.</p><p>She had transferred Unit 7's core kernel onto a portable drive. It was burning a hole in her pocket.</p>` },
-                ]
-            },
-            {
-                id: 2,
-                title: "Abstract Systems",
-                author: "Marcus Chen",
-                category: "Philosophy",
-                style: "cover-gradient-2",
-                chapters: [
-                    { title: "Form & Function", content: `<p>Design is not merely about aesthetics; it is the language of utility. When we observe the natural world, we see that nothing exists without purpose.</p><p>Consider the leaf. Its shape is dictated by the need to capture sunlight while minimizing wind resistance. It is efficient, beautiful, and inevitable.</p>` },
-                    { title: "The User Paradox", content: `<p>Users do not know what they want until they see it. This is the burden of the creator. To invent is to see a future that others cannot yet imagine.</p>` }
-                ]
-            },
-            {
-                id: 3,
-                title: "Zero Latency",
-                author: "Sarah O'Connell",
-                category: "Technology",
-                style: "cover-gradient-3",
-                chapters: [
-                    { title: "Network Theory", content: `<p>In a distributed system, consistency is the enemy of availability. We trade truth for speed every day.</p>` },
-                    { title: "Packet Loss", content: `<p>Information is never truly lost, only misplaced. The packets drift in the ether, waiting to be reassembled.</p>` }
-                ]
-            },
-            {
-                id: 4,
-                title: "Minimalist Living",
-                author: "James Drift",
-                category: "Lifestyle",
-                style: "cover-gradient-4",
-                chapters: [
-                    { title: "Less is More", content: `<p>The empty room is full of potential. By removing the clutter, we allow the mind to expand.</p>` },
-                    { title: "Digital Detox", content: `<p>Turn off the screen. Look out the window. The resolution of reality is infinite.</p>` }
-                ]
-            }
-        ];
-
-        // --- STATE ---
-        let currentBook = null;
-        let currentChapterIndex = 0;
-        const views = ['library', 'reader', 'about'];
-
-        // --- ROUTER ---
-        function router(viewId) {
-            const navMap = {'library': 0, 'about': 1};
-            document.querySelectorAll('.nav-item').forEach((link, idx) => {
-                if (idx === navMap[viewId]) {
-                    link.classList.add('text-slate-900', 'after:scale-x-100');
-                    link.classList.remove('text-slate-500', 'after:scale-x-0');
-                } else {
-                    link.classList.remove('text-slate-900', 'after:scale-x-100');
-                    link.classList.add('text-slate-500', 'after:scale-x-0');
-                }
-            });
-
-            views.forEach(v => {
-                const el = document.getElementById(`view-${v}`);
-                if (v === viewId) {
-                    el.classList.remove('hidden');
-                    el.classList.add('animate-fade-in');
-                } else {
-                    el.classList.add('hidden');
-                    el.classList.remove('animate-fade-in');
-                }
-            });
-        }
-
-        // --- LIBRARY LOGIC ---
-        function renderLibrary() {
-            const grid = document.getElementById('book-grid');
-            grid.innerHTML = '';
-            
-            library.forEach(book => {
-                const card = document.createElement('div');
-                card.className = 'group cursor-pointer flex flex-col gap-3 animate-slide-up';
-                card.onclick = () => openBook(book.id);
-                
-                card.innerHTML = `
-                    <div class="relative w-full aspect-[2/3] rounded-md shadow-sm overflow-hidden hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1 ${book.style}">
-                        <div class="absolute inset-0 p-5 flex flex-col justify-between">
-                            <div class="w-full h-[1px] bg-white/20"></div>
-                            <div class="text-center">
-                                <h3 class="text-white font-serif font-bold text-lg leading-tight mb-1">${book.title}</h3>
-                                <p class="text-slate-300 text-[10px] uppercase tracking-widest">${book.author}</p>
-                            </div>
-                            <div class="flex justify-center">
-                                <span class="text-white/40 text-[8px] font-serif italic">AP</span>
-                            </div>
-                        </div>
-                        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white py-10 px-4" id="footer">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <img src="logo.png.jpg" alt="Logo" class="w-8 h-8 rounded-lg object-contain bg-white p-1">
+                        <span class="font-semibold">Placid Projects</span>
                     </div>
-                    <div>
-                        <h4 class="text-sm font-medium text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">${book.title}</h4>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-xs text-slate-500">${book.author}</span>
-                            <span class="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded border border-slate-200">${book.category}</span>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // --- READER LOGIC ---
-        function openBook(id) {
-            const book = library.find(b => b.id === id);
-            if (!book) return;
-            
-            currentBook = book;
-            currentChapterIndex = 0;
-            
-            // Populate Sidebar Meta
-            document.getElementById('reader-book-meta').innerHTML = `
-                <div class="w-12 h-16 rounded ${book.style} mb-3 shadow-sm flex items-center justify-center">
-                    <span class="text-white text-[8px] font-serif">AP</span>
+                    <p class="text-slate-400 text-sm">Empowering learners worldwide with free access to quality education.</p>
                 </div>
-                <h4 class="text-sm font-bold text-slate-900 leading-tight mb-1">${book.title}</h4>
-                <p class="text-xs text-slate-500">${book.author}</p>
-            `;
-            
-            document.getElementById('reader-book-title-small').innerText = book.title;
-            
-            // Render Chapters List
-            renderChapterList();
-            
-            // Load First Chapter
-            loadChapter(0);
-            
-            // Switch View
-            router('reader');
-            document.getElementById('reader-scroll-container').scrollTo(0,0);
-        }
-
-        function closeBook() {
-            router('library');
-            setTimeout(() => {
-                currentBook = null;
-            }, 300);
-        }
-
-        function loadChapter(index) {
-            if (!currentBook || index < 0 || index >= currentBook.chapters.length) return;
-            currentChapterIndex = index;
-
-            const chapter = currentBook.chapters[index];
-            
-            document.getElementById('chapter-number-display').innerText = `Chapter ${index + 1}`;
-            document.getElementById('chapter-title-display').innerText = chapter.title;
-            document.getElementById('chapter-body').innerHTML = chapter.content;
-
-            // Scroll to top of content
-            const container = document.getElementById('reader-scroll-container');
-            container.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // UI Updates
-            document.getElementById('prev-chapter-btn').disabled = index === 0;
-            document.getElementById('next-chapter-btn').disabled = index === currentBook.chapters.length - 1;
-            
-            // Sidebar active state
-            renderChapterList();
-            
-            // Progress Bar
-            const progress = ((index + 1) / currentBook.chapters.length) * 100;
-            document.getElementById('read-progress').style.width = `${progress}%`;
-        }
-
-        function changeChapter(direction) {
-            loadChapter(currentChapterIndex + direction);
-        }
-
-        function renderChapterList() {
-            const container = document.getElementById('chapter-list');
-            container.innerHTML = '';
-            
-            currentBook.chapters.forEach((chapter, index) => {
-                const isActive = index === currentChapterIndex;
-                const btn = document.createElement('button');
-                btn.className = `w-full text-left py-2.5 px-3 rounded text-xs transition-all flex items-center justify-between group ${isActive ? 'bg-slate-200/60 text-slate-900 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'}`;
-                btn.onclick = () => loadChapter(index);
-                
-                btn.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <span class="text-[10px] ${isActive ? 'text-slate-600' : 'text-slate-400'}">0${index + 1}</span>
-                        <span>${chapter.title}</span>
+                <div>
+                    <h4 class="font-medium mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="#" onclick="navigate('home')" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#" onclick="navigate('about')" class="hover:text-white transition-colors">About</a></li>
+                        <li><a href="#" onclick="navigate('contact')" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-4">Categories</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="#" onclick="filterByCategory('Technology')" class="hover:text-white transition-colors">Technology</a></li>
+                        <li><a href="#" onclick="filterByCategory('Design')" class="hover:text-white transition-colors">Design</a></li>
+                        <li><a href="#" onclick="filterByCategory('Business')" class="hover:text-white transition-colors">Business</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-4">Connect</h4>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center hover:bg-slate-600 transition-colors">
+                            <i data-lucide="twitter" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center hover:bg-slate-600 transition-colors">
+                            <i data-lucide="facebook" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center hover:bg-slate-600 transition-colors">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
                     </div>
-                    ${isActive ? '<div class="w-1.5 h-1.5 rounded-full bg-slate-900"></div>' : ''}
-                `;
-                container.appendChild(btn);
-            });
-        }
+                </div>
+            </div>
+            <div class="border-t border-slate-700 pt-6 text-center text-sm text-slate-400">
+                <p>© 2025 Atlas Learn. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
-        function updateFontSize(val) {
-            document.getElementById('chapter-body').style.fontSize = `${val}px`;
-        }
+    <script>
+    // ============================================================
+    // 📚 BOOK DATABASE - YOUR BOOKS
+    // ============================================================
+    const library = [
+        {id:1,title:"A Court Of Mist And Fury",author:"SARAH J. MAAS",category:"Technology",image:"A_Court_Of_Mist_And_Fury.jpg",pdf:"books/A_Court_of_Mist_and_Fury.PDF"},
+        {id:2,title:"A Court Of Thorns And Roses",author:"SARAH J. MAAS",category:"Design",image:"A_Cout_Of_Thorns_And _Roses.jpg",pdf:"books/A_Court_of_Thorns_And_Roses.PDF"},
+        {id:3,title:"JavaScript And JQuery",author:"Jon Duckett",category:"Science",image:"JavaScript_And_JQuery.jpg",pdf:"books/JavaScript_And_JQuery.PDF"},
+        {id:4,title:"Python Programming",author:"John Zelle",category:"Philosophy",image:"Python_Programming.jpg",pdf:"books/Python_Programming.PDF"},
+        {id:5,title:"Us Dark Few",author:"BRIAN K. VAUGHAN",category:"Technology",image:"Us_Dark_Few.jpg",pdf:"books/Us_Dark_Few.PDF"},
+        {id:6,title:"Variant Lost",author:"COLIN BARRETT",category:"Business",image:"Variant_Lost.jpg",pdf:"books/Variant_Lost.PDF"},
+        {id:7,title:"Web Design",author:"Robin Williams",category:"Design",image:"Web_Design.jpg",pdf:"books/Web_Design.pdf"},
+        {id:8,title:"Neural Networks",author:"Dr. Wei Chang",category:"Technology",image:"https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=600&fit=crop",pdf:"books/neural-networks.pdf"}
+    ];
 
-        function setFont(type) {
-            const content = document.getElementById('chapter-body');
-            content.classList.remove('font-serif', 'font-sans', 'font-mono', 'font-reading');
-            
-            if (type === 'serif') content.classList.add('font-reading');
-            if (type === 'sans') content.classList.add('font-sans');
-            if (type === 'mono') content.classList.add('font-mono');
-        }
+    const categories = [
+        {name:"Technology",icon:"cpu"},{name:"Design",icon:"palette"},{name:"Business",icon:"briefcase"},{name:"Science",icon:"atom"},{name:"Philosophy",icon:"brain"},{name:"Arts",icon:"pen-tool"}
+    ];
 
-        function toggleMobileMenu() {
-            // Simple alert for now as requested structure implies minimal code changes
-             router('library'); // Fallback
-        }
+    let currentFilter = "all";
 
-        // --- INIT ---
-        window.addEventListener('DOMContentLoaded', () => {
+    // Navigation with animations
+    function navigate(view) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        const targetView = document.getElementById(`view-${view}`);
+        targetView.classList.add('active');
+        window.scrollTo({top:0,behavior:'smooth'});
+        
+        // Hide footer on reader view
+        document.getElementById('footer').style.display = view === 'reader' ? 'none' : 'block';
+        
+        // Re-render if going home
+        if(view === 'home') renderLibrary();
+        
+        lucide.createIcons();
+    }
+
+    // Render book cards with stagger animation
+    function renderBookCard(book, index) {
+        return `
+        <div class="book-card stagger-item cursor-pointer bg-white rounded-xl overflow-hidden border border-slate-200" onclick="openBook(${book.id})" style="animation-delay:${0.05 * index}s">
+            <div class="relative h-48 overflow-hidden">
+                <img src="${book.image}" alt="${book.title}" class="book-image w-full h-full object-cover">
+                <div class="absolute inset-0 gradient-overlay"></div>
+                <div class="book-overlay">
+                    <span class="px-4 py-2 bg-white text-slate-800 rounded-lg text-sm font-medium flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-4 h-4"></i> Read Now
+                    </span>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-4">
+                    <span class="inline-block px-2 py-1 bg-white/20 backdrop-blur rounded text-white text-[10px] mb-2">${book.category}</span>
+                    <h3 class="text-white font-semibold text-sm leading-tight">${book.title}</h3>
+                </div>
+            </div>
+            <div class="p-4">
+                <p class="text-xs text-slate-500 flex items-center gap-1">
+                    <i data-lucide="user" class="w-3 h-3"></i> ${book.author}
+                </p>
+            </div>
+        </div>`;
+    }
+
+    function renderLibrary() {
+        const books = currentFilter === 'all' ? library : library.filter(b => b.category === currentFilter);
+        document.getElementById('library-grid').innerHTML = books.map((b,i) => renderBookCard(b,i)).join('');
+        lucide.createIcons();
+    }
+
+    function renderCategories() {
+        document.getElementById('categories-grid').innerHTML = categories.map((c,i) => `
+            <div class="category-card stagger-item cursor-pointer p-4 bg-white rounded-xl border border-slate-200 text-center" onclick="filterByCategory('${c.name}')" style="animation-delay:${0.1*i}s">
+                <div class="category-icon w-10 h-10 mx-auto mb-2 bg-slate-100 rounded-xl flex items-center justify-center">
+                    <i data-lucide="${c.icon}" class="w-5 h-5 text-slate-600"></i>
+                </div>
+                <h3 class="font-medium text-xs text-slate-700">${c.name}</h3>
+            </div>
+        `).join('');
+        lucide.createIcons();
+    }
+
+    function filterByCategory(cat) {
+        currentFilter = cat;
+        renderLibrary();
+        document.getElementById('books-section').scrollIntoView({behavior:'smooth'});
+    }
+
+    function handleSearch(q) {
+        if (!q) { currentFilter = 'all'; renderLibrary(); return; }
+        const results = library.filter(b => 
+            b.title.toLowerCase().includes(q.toLowerCase()) || 
+            b.author.toLowerCase().includes(q.toLowerCase())
+        );
+        document.getElementById('library-grid').innerHTML = results.map((b,i) => renderBookCard(b,i)).join('');
+        lucide.createIcons();
+    }
+
+    function openBook(id) {
+        const book = library.find(b => b.id === id);
+        if (!book) return;
+        document.getElementById('reader-title').textContent = book.title;
+        document.getElementById('pdf-viewer').src = book.pdf;
+        document.getElementById('download-link').href = book.pdf;
+        navigate('reader');
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        const form = document.getElementById('contact-form');
+        const btn = form.querySelector('button[type="submit"]');
+        
+        // Show loading state
+        btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Sending...';
+        btn.disabled = true;
+        
+        // Simulate sending (replace with real API call)
+        setTimeout(() => {
+            form.classList.add('hidden');
+            document.getElementById('success-message').classList.remove('hidden');
             lucide.createIcons();
-            renderLibrary();
-            // Default view
-            router('library');
-        });
+        }, 1500);
+    }
 
+    function resetForm() {
+        const form = document.getElementById('contact-form');
+        form.reset();
+        form.classList.remove('hidden');
+        form.querySelector('button[type="submit"]').innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Send Message';
+        form.querySelector('button[type="submit"]').disabled = false;
+        document.getElementById('success-message').classList.add('hidden');
+        lucide.createIcons();
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+        renderLibrary();
+        renderCategories();
+    });
     </script>
 </body>
 </html>
